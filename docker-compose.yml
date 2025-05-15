@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "8000:8000"
+    environment:
+      - VM_I=localhost
+    restart: unless-stopped
+    networks:
+      - app-network
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "80:80"
+    environment:
+      - BACKEND_ADDR=http://backend:8000
+      - VM_I=localhost
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+networks:
+  app-network:
